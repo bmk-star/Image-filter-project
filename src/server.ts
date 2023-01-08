@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import {Router, Request, Response} from 'express'
 
 (async () => {
 
@@ -29,20 +30,27 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   /**************************************************************************** */
 
+ 
+
+  app.get("/filteredimage", async(req: Request, res: Response) => {
+    const image_url = req.query.image_url.toString();
+    if (!image_url){
+      res.status(400).send('User should input a proper image url');
+    }
+    const imagefromurl = await filterImageFromURL(image_url)
+    res.status(200).sendFile(imagefromurl, () =>(
+      deleteLocalFiles([imagefromurl])
+    ))
+  });
   //! END @TODO1
 
-  app.get("/filteredimage", async(req, res) => {
-    res.send("This filteredimage url")
-  });
-  
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {
     res.send("try GET /filteredimage?image_url={{}}")
   } );
   
-
-  // Start the Server
+ // Start the Server
   app.listen( port, () => {
       console.log( `server running http://localhost:${ port }` );
       console.log( `press CTRL+C to stop server` );
