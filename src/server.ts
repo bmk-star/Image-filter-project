@@ -33,11 +33,13 @@ import {Router, Request, Response} from 'express'
  
 
   app.get("/filteredimage", async(req: Request, res: Response) => {
-    const image_url = req.query.image_url.toString();
+    //const image_url = req.query.image_url.toString();
+    const image_url: string = req.query.image_url.toString();
     if (!image_url){
       res.status(400).send('User should input a proper image url');
     }
-    const imagefromurl = await filterImageFromURL(image_url)
+    //const imagefromurl = await filterImageFromURL(image_url)
+    const imagefromurl: string = await filterImageFromURL(image_url)
     res.status(200).sendFile(imagefromurl, () =>(
       deleteLocalFiles([imagefromurl])
     ))
@@ -46,7 +48,7 @@ import {Router, Request, Response} from 'express'
 
   // Root Endpoint
   // Displays a simple message to the user
-  app.get( "/", async ( req, res ) => {
+  app.get( "/", async ( req: Request, res: Response ) => {
     res.send("try GET /filteredimage?image_url={{}}")
   } );
   
